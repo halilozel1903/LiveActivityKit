@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Swift tests
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v5
+      - name: Toolchain
+        run: swift --version
+      - name: Build
+        run: swift build
+      - name: Test
+        run: swift test
+      # The Mac build above skips everything behind ActivityKit; this builds it for iOS.
+      - name: Build for iOS Simulator
+        run: |
+          xcodebuild build \
+            -scheme LiveActivityKit \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO
+
+  example:
+    name: Example app and widget extension
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        working-directory: Example
+        run: xcodegen generate
+      - name: Build for iOS Simulator
+        run: |
+          xcodebuild build \
+            -project Example/LiveActivityDemo.xcodeproj \
+            -scheme LiveActivityDemo \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO
+
+  screenshots:
+    name: README screenshots
+    if: github.event_name != 'pull_request'
+    needs: [test, example]
+    runs-on: macos-26
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        working-directory: Example
+        run: xcodegen generate
+      - name: Capture screenshots (iPhone)
+        run: bash scripts/screenshots.sh LiveActivityDemo io.github.halilozel1903.LiveActivityDemo delivery timer score island
+      - name: Commit screenshots
+        run: |
+          git config user.name "Halil Özel"
+          git config user.email "halilozel1903@gmail.com"
+          git add docs/screenshots
+          if git diff --cached --quiet; then
+            echo "Screenshots unchanged"
+          else
+            git commit -m "Update README screenshots [skip ci]"
+            git push
+          fi

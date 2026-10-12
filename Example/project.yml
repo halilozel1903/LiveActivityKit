@@ -1,0 +1,72 @@
+name: LiveActivityDemo
+options:
+  bundleIdPrefix: io.github.halilozel1903
+  deploymentTarget:
+    iOS: "17.0"
+packages:
+  LiveActivityKit:
+    path: ..
+targets:
+  LiveActivityDemo:
+    # The gallery app. It embeds the widget extension that draws the Live Activities, and declares
+    # NSSupportsLiveActivities so it can start them.
+    type: application
+    platform: iOS
+    sources:
+      - LiveActivityDemo
+    dependencies:
+      - package: LiveActivityKit
+      - target: LiveActivityWidgets
+    info:
+      path: LiveActivityDemo-Info.plist
+      properties:
+        CFBundleDisplayName: Live Activities
+        NSSupportsLiveActivities: true
+        UILaunchScreen: {}
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.halilozel1903.LiveActivityDemo
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Live Activities
+        INFOPLIST_KEY_NSSupportsLiveActivities: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIUserInterfaceStyle: Dark
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "6.0"
+        TARGETED_DEVICE_FAMILY: "1"
+
+  LiveActivityWidgets:
+    # The WidgetKit extension: one Live Activity widget per LiveActivityKit template.
+    type: app-extension
+    platform: iOS
+    sources:
+      - LiveActivityWidgets
+    dependencies:
+      - package: LiveActivityKit
+    info:
+      path: LiveActivityWidgets-Info.plist
+      properties:
+        CFBundleDisplayName: Live Activities
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.github.halilozel1903.LiveActivityDemo.LiveActivityWidgets
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Live Activities
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "6.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        SKIP_INSTALL: YES
+schemes:
+  LiveActivityDemo:
+    build:
+      targets:
+        LiveActivityDemo: all
+        LiveActivityWidgets: all
+    run:
+      config: Debug
