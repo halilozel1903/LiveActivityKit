@@ -127,18 +127,9 @@ public struct DeliveryActivityView: View {
                     .foregroundStyle(tint)
             }
         case .expandedLeading:
-            HStack(spacing: 8) {
-                LiveActivitySymbolBadge(systemName: attributes.symbolName, tint: attributes.tint, size: 36)
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(attributes.merchant)
-                        .font(.system(size: 15, weight: .semibold))
-                        .lineLimit(1)
-                    Text("#" + attributes.orderNumber)
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(.secondary)
-                }
-            }
-            .padding(.leading, 4)
+            // The region beside the camera is too narrow for a name, so the merchant goes in the center region.
+            LiveActivitySymbolBadge(systemName: attributes.symbolName, tint: attributes.tint, size: 36)
+                .padding(.leading, 4)
         case .expandedTrailing:
             VStack(alignment: .trailing, spacing: 0) {
                 arrivalText
@@ -150,9 +141,15 @@ public struct DeliveryActivityView: View {
             }
             .padding(.trailing, 4)
         case .expandedCenter:
-            Text(attributes.stepTitle(for: state))
-                .font(.system(size: 14, weight: .semibold))
-                .lineLimit(1)
+            VStack(spacing: 1) {
+                Text(attributes.merchant)
+                    .font(.system(size: 15, weight: .semibold))
+                    .lineLimit(1)
+                Text("#" + attributes.orderNumber + " · " + attributes.stepTitle(for: state))
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
         case .expandedBottom:
             VStack(alignment: .leading, spacing: 8) {
                 LiveActivityStepBar(progress: progress, tint: tint)

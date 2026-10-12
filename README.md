@@ -37,11 +37,11 @@ await deliveries.update(.init(stepIndex: 2, eta: .now + 12 * 60, courierName: "M
 
 ## Screenshots
 
-Captured by CI from the example app's gallery on an iPhone simulator. The Lock Screen and the Dynamic Island are drawn with the package's preview views, because a simulator screenshot cannot show a running Live Activity; the gallery's buttons start real ones.
+Captured by CI from the example app's gallery on an iPhone simulator. CI cannot capture a real Live Activity, so the Lock Screen and Dynamic Island views you see here are the gallery's drawn previews (the package's preview views, rendering the same template views a running activity uses). The gallery's buttons start real Live Activities when you run the app yourself.
 
 | Delivery | Timer |
 | :---: | :---: |
-| <img src="docs/screenshots/iphone-delivery.png" alt="iPhone: the delivery template on a drawn Lock Screen with its step bar and arrival countdown, then its compact and expanded Dynamic Island" width="250"> | <img src="docs/screenshots/iphone-timer.png" alt="iPhone: the timer template on a drawn Lock Screen with its countdown and progress ring, then its compact and expanded Dynamic Island" width="250"> |
+| <img src="docs/screenshots/iphone-delivery.png" alt="iPhone: the delivery template on a drawn Lock Screen with its step bar and arrival countdown, then its drawn compact and expanded Dynamic Island" width="250"> | <img src="docs/screenshots/iphone-timer.png" alt="iPhone: the timer template on a drawn Lock Screen with its countdown and progress ring, then its compact and expanded Dynamic Island" width="250"> |
 
 | Score | Dynamic Island |
 | :---: | :---: |
